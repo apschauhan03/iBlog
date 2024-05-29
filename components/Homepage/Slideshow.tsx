@@ -5,6 +5,7 @@ import { BsChevronRight } from "react-icons/bs";
 import { RxDotFilled } from "react-icons/rx";
 export default function Slideshow() {
     const [imageNumber,setImageNumber] = useState(0);
+    
     const images = [
         {
             url: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2620&q=80',
@@ -17,10 +18,14 @@ export default function Slideshow() {
     const leftImageHandler = ()=>{
         if(imageNumber!==0)
                 setImageNumber(imageNumber-1);
+        else
+                setImageNumber(images.length-1);
     }
     const rightImageHandler = ()=>{
         if(imageNumber<images.length-1)
                 setImageNumber(imageNumber+1);
+        else    
+                setImageNumber(0);
     }
     return (
         <div className="w-full h-full relative group">
