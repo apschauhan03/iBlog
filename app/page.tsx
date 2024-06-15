@@ -9,7 +9,7 @@ export default function Home() {
     <div>
       <Featured/>
       <CategoryList/>
-      <div>
+      <div className="flex flex-row gap-4 md:flex-col">
         <Recent/>
         <PopularMenu/>
       </div>

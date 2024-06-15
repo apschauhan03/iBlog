@@ -28,8 +28,8 @@ export default function RootLayout({
               <ToggleDark />
               <Navbar />
               {children}
-              <Footer />
             </ThemeProvider>
+            <Footer/>
           </div>
         </ThemeContextProvider>
       </body>

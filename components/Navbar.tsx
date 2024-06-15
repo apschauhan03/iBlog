@@ -19,8 +19,8 @@ export default function Navbar() {
       <div className=" flex justify-center flex-1 text-center font-bold text-2xl md:justify-start md:text-3xl"><Link href='/'>iBlog</Link></div>
       <div className=" flex flex-1 gap-3 text-sm font-light items-center justify-end md:hidden">
         {/* <Link href='/'>Homepage</Link> */}
-        <Link href='/contact'>Contact</Link>
-        <Link href='/about'>About</Link>
+        {/* <Link href='/contact'>Contact</Link>
+        <Link href='/about'>About</Link> */}
         <HomePageAuth/>
       </div>
       <Hammenu/>
