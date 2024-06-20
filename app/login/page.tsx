@@ -1,8 +1,8 @@
 "use client"
 
-import { SignUpAction } from "@/actions/AuthActions";
+import { LoginAction, SignUpAction } from "@/actions/AuthActions";
 import { useState } from "react";
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 
 const initialState = {
     message:""
@@ -10,7 +10,9 @@ const initialState = {
 const page = () => {
 
     const [signUp, setSignUp] = useState(false);
-    const [formState,formAction] = useFormState(SignUpAction,initialState)
+    const [formState,formAction] = useFormState(SignUpAction,initialState);
+    const [loginFormState,loginFormAction] = useFormState(LoginAction,initialState);
+    const {pending} = useFormStatus();
 
     if (signUp) {
         return (
@@ -38,7 +40,7 @@ const page = () => {
                             {formState?.message&&<p className="flex justify-center items-center text-sm text-red-500">{formState.message}</p>}
                         </div>
                         <div onClick={() => setSignUp(true)} className=" m-2">
-                            <button type="submit" className="px-4 py-1 hover:bg-slate-600 bg-slate-400 text-sm w-full">SignUp</button>
+                            <button disabled={pending} type="submit" className="px-4 py-1 hover:bg-slate-600 bg-slate-400 text-sm w-full">SignUp</button>
                         </div>
                         <div onClick={()=> setSignUp(false)} className=" m-2">
                             <button className="px-4 py-1 hover:bg-slate-600 bg-slate-400 text-sm w-full">Login</button>
@@ -47,20 +49,23 @@ const page = () => {
                 </div>
             </form>)
     }
-    return (<div className="flex justify-center items-center h-[450px]">
+    return (<form action={loginFormAction} className="flex justify-center items-center h-[450px]">
         <div className=" flex flex-col justify-center items-center w-full">
             <h2 className=" font-semibold  text-2xl">Login</h2>
             <div className="md:w-full w-[60%]">
                 <div className=" flex flex-col justify-between m-2">
-                    <label className=" text-sm">Email</label>
-                    <input className=" rounded-sm outline-none bg-slate-600 px-3 text-[12px] py-1 w-full" />
+                    <label  className=" text-sm">Email</label>
+                    <input name="email" className=" rounded-sm outline-none bg-slate-600 px-3 text-[12px] py-1 w-full" />
                 </div>
                 <div className=" flex flex-col justify-between m-2">
                     <label className=" text-sm">Password</label>
-                    <input className=" rounded-sm outline-none bg-slate-600 px-3 text-[12px] py-1 w-full" type="password" />
+                    <input name="password" className=" rounded-sm outline-none bg-slate-600 px-3 text-[12px] py-1 w-full" type="password" />
                 </div>
+                <div className=" flex flex-col justify-between m-2">
+                            {loginFormState?.message&&<p className="flex justify-center items-center text-sm text-red-500">{loginFormState.message}</p>}
+                        </div>
                 <div className=" m-2">
-                    <button className="px-4 py-1 hover:bg-slate-600 bg-slate-400 text-sm w-full">Login</button>
+                    <button disabled={pending} className="px-4 py-1 hover:bg-slate-600 bg-slate-400 text-sm w-full">Login</button>
                 </div>
                 <div onClick={() => setSignUp(true)} className=" m-2">
                     <button className="px-4 py-1 hover:bg-slate-600 bg-slate-400 text-sm w-full">SignUp</button>
@@ -75,6 +80,6 @@ const page = () => {
                 </div>
             </div>
         </div>
-    </div>);
+    </form>);
 }
 export default page;

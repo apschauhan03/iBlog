@@ -1,11 +1,10 @@
 "use server"
 
 // prisma db
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import prisma from "@/prisma/base";
 
 // hashing with salting A tier
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
 const saltRounds = 10;
 
 
@@ -14,7 +13,7 @@ interface userType {
         name: string;
         email: string;
         password: string;
-        posts:{}
+        posts: {}
     }
 }
 export async function SignUpAction(prevState: any, formData: FormData) {
@@ -47,6 +46,17 @@ export async function SignUpAction(prevState: any, formData: FormData) {
             message: "Passwords are not matching"
         }
 
+     const existingUser = await prisma.iBlogUsers.findFirst({
+            where: { email: email }
+        });
+
+        console.log(existingUser);
+        if(existingUser)
+        {
+            return {
+                message:"email already exist"
+            };   
+        }
 
     bcrypt.hash(password, saltRounds, async function (err: any, hash: string) {
         if (err) {
@@ -55,22 +65,61 @@ export async function SignUpAction(prevState: any, formData: FormData) {
                 message: "Password invalid"
             }
         }
-
         // store into our db
-        let newUser: userType = {
+        let newUser:userType = {
             data: {
                 name: name,
                 email: email,
                 password: hash,
-                posts:{}
+                posts: {}
             }
         }
-        await prisma.iBlogUsers.create(newUser)
-        const allUsers = await prisma.iBlogUsers.findMany();
-        console.log(allUsers);
+            await prisma.iBlogUsers.create(newUser)
+
     });
-    return {
-        message: "Account Created Successfully"
+
+
+    
+    return  {message: "Account Created Successfully"}
+    
+
+}
+
+export const LoginAction = async (prevState: any, formData: FormData) => {
+    const email = formData.get("email")?.toString();
+    const password = formData.get("password")?.toString();
+    if (email == undefined || password == undefined) {
+        return {
+            message: "Please enter the correct credentials"
+        }
     }
+
+    const user = await prisma.iBlogUsers.findFirst({
+        where: {
+            email: email,
+        },
+    })
+
+    if(!user)
+    {
+        console.log("Username not found");
+        return {
+            message:"Username or password is incorrect"
+        }
+    }
+    const hashedPassword: string = user.password;
+    const result = await bcrypt.compare(password, hashedPassword);
+
+    if(!result) {
+        console.log("Password not matched");
+        return {
+            message:"Username or password is incorrect"
+        }
+    }
+
+
+    console.log("User is authenticated");
+
+
 
 }
