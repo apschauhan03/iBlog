@@ -34,7 +34,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           },
         });
 
-        if (!user) {
+        if (!user||!user.password) {
           throw new CredentialsSignin(
             "Provided email or password is incorrect"
           );
@@ -61,14 +61,15 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   },
   callbacks: {
     async session({ session, token }) {
-      if (token?.sub) session.user.id = token.sub;
 
+      if(token.sub)
+        session.user.id = token.sub;
       return session;
     },
     signIn: async ({ user, account }) => {
       if (account?.provider === "google"||account?.provider==="github") {
           const { email, name, image } = user;
-          const existingUser = await prisma.iBlogOAuthUsers.findFirst({
+          const existingUser = await prisma.iBlogUsers.findFirst({
             where: { email: email as string },
           });
           if (!existingUser) {
@@ -82,14 +83,18 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             };
             try
             {
-              await prisma.iBlogOAuthUsers.create(newUser);
+              const data = await prisma.iBlogUsers.create(newUser);
+              user.id = data.id;
               return true;
             }
             catch(err)
             {
               return false;
             }
-          } else return true;
+          } else {
+            user.id = existingUser?.id;
+            return true;
+          }
       }
       if(account?.provider === "credentials")
             return true;

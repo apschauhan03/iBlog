@@ -1,9 +1,8 @@
-import { auth } from "@/auth";
+
 import CategoryList from "@/components/CategoryList";
 import Featured from "@/components/Featured";
 import PopularMenu from "@/components/PopularMenu";
 import Recent from "@/components/Recent";
-import { redirect } from "next/navigation";
 
 
 export default async function Home() {

@@ -90,7 +90,7 @@ export async function SignUpAction(prevState: any, formData: FormData) {
 export const LoginAction = async (prevState: any, formData: FormData) => {
     const email = formData.get("email")?.toString();
     const password = formData.get("password")?.toString();
-    if (email == undefined || password == undefined) {
+    if (!email || !password ) {
         return {
             message: "Please enter the correct credentials"
         }
@@ -102,7 +102,7 @@ export const LoginAction = async (prevState: any, formData: FormData) => {
         },
     })
 
-    if (!user) {
+    if (!user||!user.password) {
         console.log("Username not found");
         return {
             message: "Username or password is incorrect"

@@ -11,24 +11,32 @@ model iBlogPosts {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   title String
   content String
-  userId String @db.ObjectId
-  user   iBlogUsers   @relation(fields: [userId], references: [id])
-  userOAuth   iBlogOAuthUsers   @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  authorId String @db.ObjectId
+  authorName String
+  like Int
+  dislike Int
+  user iBlogUsers @relation(fields: [authorId],references: [id])
+  @@index([createdAt])
+  // comments Comment[]
 }
+
+// model Comment{
+//   // id      String @id @default(auto()) @map("_id") @db.ObjectId
+//   // comment String
+//   // post    iBlogPosts   @relation(fields: [postId], references: [id])
+//   // postId  String @db.ObjectId
+//   // authorId String @db.ObjectId
+//   // user   iBlogUsers   @relation(fields: [authorId], references: [id])
+// }
 
 model iBlogUsers {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
   email String @unique
   image String?
-  password String
+  password String?
   name String
   posts iBlogPosts[]
-}
-
-model iBlogOAuthUsers{
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  email String @unique
-  image String?
-  name String
-  posts iBlogPosts[]
+  // comments Comment[]
 }
