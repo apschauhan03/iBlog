@@ -1,10 +1,11 @@
 "use server"
 
-// prisma db
+import { signIn } from "@/auth";
 import prisma from "@/prisma/base";
-
-// hashing with salting A tier
 import bcrypt from 'bcrypt';
+import { CredentialsSignin } from "next-auth";
+import { redirect } from "next/navigation";
+
 const saltRounds = 10;
 
 
@@ -13,6 +14,7 @@ interface userType {
         name: string;
         email: string;
         password: string;
+        // image: string;
         posts: {}
     }
 }
@@ -46,17 +48,16 @@ export async function SignUpAction(prevState: any, formData: FormData) {
             message: "Passwords are not matching"
         }
 
-     const existingUser = await prisma.iBlogUsers.findFirst({
-            where: { email: email }
-        });
+    const existingUser = await prisma.iBlogUsers.findFirst({
+        where: { email: email }
+    });
 
-        console.log(existingUser);
-        if(existingUser)
-        {
-            return {
-                message:"email already exist"
-            };   
-        }
+    console.log(existingUser);
+    if (existingUser) {
+        return {
+            message: "email already exist"
+        };
+    }
 
     bcrypt.hash(password, saltRounds, async function (err: any, hash: string) {
         if (err) {
@@ -66,22 +67,23 @@ export async function SignUpAction(prevState: any, formData: FormData) {
             }
         }
         // store into our db
-        let newUser:userType = {
+        let newUser: userType = {
             data: {
                 name: name,
                 email: email,
                 password: hash,
-                posts: {}
+                posts: {},
+                // image: ""
             }
         }
-            await prisma.iBlogUsers.create(newUser)
+        await prisma.iBlogUsers.create(newUser)
 
     });
 
 
-    
-    return  {message: "Account Created Successfully"}
-    
+
+    return { message: "Account Created Successfully" }
+
 
 }
 
@@ -100,26 +102,48 @@ export const LoginAction = async (prevState: any, formData: FormData) => {
         },
     })
 
-    if(!user)
-    {
+    if (!user) {
         console.log("Username not found");
         return {
-            message:"Username or password is incorrect"
+            message: "Username or password is incorrect"
         }
     }
     const hashedPassword: string = user.password;
     const result = await bcrypt.compare(password, hashedPassword);
 
-    if(!result) {
+    if (!result) {
         console.log("Password not matched");
         return {
-            message:"Username or password is incorrect"
+            message: "Username or password is incorrect"
         }
     }
 
 
-    console.log("User is authenticated");
+    try {
+        await signIn("credentials", {
+            redirect: false,
+            callbackUrl: "/",
+            email,
+            password
+        })
+
+    }
+    catch (error) {
+        const loginError = error as CredentialsSignin;
+        return loginError;
+    }
+    redirect("/");
+
+}
 
 
+export const loginWithGit = async () => {
+    "use server"
+    await signIn("github", { redirectTo: "/" });
+}
 
+export const loginWithGoogle = async () => {
+    "use server"
+
+    await signIn("google", { redirectTo: "/" });
 }

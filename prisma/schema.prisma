@@ -13,12 +13,22 @@ model iBlogPosts {
   content String
   userId String @db.ObjectId
   user   iBlogUsers   @relation(fields: [userId], references: [id])
+  userOAuth   iBlogOAuthUsers   @relation(fields: [userId], references: [id])
 }
 
 model iBlogUsers {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
   email String @unique
+  image String?
   password String
+  name String
+  posts iBlogPosts[]
+}
+
+model iBlogOAuthUsers{
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  email String @unique
+  image String?
   name String
   posts iBlogPosts[]
 }

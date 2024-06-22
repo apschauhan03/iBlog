@@ -1,14 +1,16 @@
 "use client"
-
+import { signOut } from 'next-auth/react';
 import Link from 'next/link';
-import React, { useState } from 'react'
 
-export default function HomePageAuth() {
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
+export default function HomePageAuth({sessionString}:any) {
+    const handleLogout = async ()=>{
+        await signOut();
+    }
     return (
         <>
-            {isLoggedIn ? (<><Link href='/createpost'>Write</Link>
-                <span className=' cursor-pointer' onClick={()=>setIsLoggedIn(false)}>Logout</span></>) : (<Link href='/login'>Login</Link>)}
+            <Link href='/createpost'>Write</Link>
+            { sessionString ? (<>
+                <span className=' cursor-pointer' onClick={handleLogout}>Logout</span></>) : (<Link href='/login'>Login</Link>)}
         </>
     )
 }

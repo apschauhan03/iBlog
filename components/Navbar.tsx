@@ -6,8 +6,10 @@ import { FaGithub } from "react-icons/fa";
 import { SiLeetcode } from "react-icons/si";
 import Image from "next/image";
 import Hammenu from "./Responsive/Hammenu";
+import { auth } from "@/auth";
 
-export default function Navbar() {
+export default async function Navbar() {
+  const session = await auth();
   return (
     <div className=" flex h-24 items-center flex-1 justify-between">
       <div className=" flex flex-1 items-center gap-1 md:hidden">
@@ -21,7 +23,7 @@ export default function Navbar() {
         {/* <Link href='/'>Homepage</Link> */}
         {/* <Link href='/contact'>Contact</Link>
         <Link href='/about'>About</Link> */}
-        <HomePageAuth/>
+        <HomePageAuth sessionString={session?session:null}/>
       </div>
       <Hammenu/>
     </div>
