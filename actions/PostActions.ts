@@ -30,14 +30,14 @@ export const postPublishAction = async (title: string, formData: string) => {
     data: {
       title: title,
       content: formData,
-      authorName: session?.user?.name,
+      authorName: session?.user?.name as string,
       firstImage:coverImage,
       like: 0,
       dislike: 0,
       authorId: session?.user?.id,
     },
   };
-  await prisma.iBlogPosts.create(newPost);
+      await prisma.iBlogPosts.create(newPost);
   revalidatePath('/');
   redirect('/');
 };

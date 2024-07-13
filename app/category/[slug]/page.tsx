@@ -1,15 +1,15 @@
 import RecentBlogsCard from "@/components/Homepage/RecentBlogsCard"
 import { colorMap } from "@/components/CategoryList";
-import Pagination from "@/components/pagination";
+// import Pagination from "@/components/pagination";
 
 interface pageProps {
     params: {
         slug:string;
     }
-    bgColor:string;
+    // bgColor:string;
 }
 
-const page:React.FC<pageProps> = ({params,bgColor}) => {
+const page:React.FC<pageProps> = ({params}) => {
     const theme = colorMap[params.slug as keyof typeof colorMap];
     return (
         <div>
@@ -25,7 +25,7 @@ const page:React.FC<pageProps> = ({params,bgColor}) => {
                 <RecentBlogsCard />
             </div>
             <div className="p-4">
-                <Pagination/>
+                {/* <Pagination/> */}
             </div>
         </div>
     )
