@@ -11,9 +11,6 @@ const page: React.FC = async ({ params }: any) => {
         }
     });
     return <div>
-        <div className=" flex justify-center items-center relative min-h-[300px] h-auto w-full">
-            <Image fill alt="Image of blog" style={{ objectFit: "contain" }} src={"https://images.unsplash.com/photo-1710692063056-07d0e4c28b4b?q=80&w=2564&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"} />
-        </div>
         <header className=" font-semibold text-lg flex text-center p-2 justify-start">
             {getPost?.title}
         </header>

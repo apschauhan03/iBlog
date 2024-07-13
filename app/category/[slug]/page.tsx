@@ -1,6 +1,6 @@
 import RecentBlogsCard from "@/components/Homepage/RecentBlogsCard"
-import Pagination from "@/components/Pagination"
 import { colorMap } from "@/components/CategoryList";
+import Pagination from "@/components/pagination";
 
 interface pageProps {
     params: {

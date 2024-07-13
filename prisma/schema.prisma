@@ -16,6 +16,7 @@ model iBlogPosts {
   authorId String @db.ObjectId
   authorName String
   like Int
+  firstImage String?
   dislike Int
   user iBlogUsers @relation(fields: [authorId],references: [id])
   @@index([createdAt])

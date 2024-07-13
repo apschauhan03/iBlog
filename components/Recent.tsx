@@ -1,14 +1,36 @@
 
-import React, { useState } from 'react'
+import React from 'react'
 import RecentBlogsCard from './Homepage/RecentBlogsCard'
 import prisma from '@/prisma/base';
+import Pagination from './Pagination';
 
-export default async function Recent() {
+export default async function Recent({
+  searchParams,
+}: {
+  searchParams?: {
+    query?: string;
+    page?: string;
+  };
+}) {
+
+  const numberOfPosts = await prisma.$transaction([
+    prisma.iBlogPosts.count(),
+  ])
+
+
+  console.log("Search Params", searchParams);
+  const currentPage = Number(searchParams?.page) || 0;
   const lastFivePosts = await prisma.iBlogPosts.findMany({
-    skip: 0, // Offset for pagination (starts at 0)
+    skip: currentPage*numberOfPosts[0], // Offset for pagination (starts at 0)
     take: 5,  // Limit to 5 results
     orderBy: { createdAt: 'desc' }, // Order by creation date descending
   })
+
+  
+  console.log('====================================');
+  console.log(currentPage);
+  console.log('====================================');
+
 
 
   return (
@@ -17,11 +39,9 @@ export default async function Recent() {
         <div className=' font-semibold'>Recent Blogs
           {lastFivePosts.map(post => <RecentBlogsCard key={post} postDetails={post} />)}
         </div>
+        <Pagination numOfPosts = {numberOfPosts[0]}/>
       </div>
-      <div className='flex justify-between items-center m-4'>
-        <button className=' bg-slate-500 hover:bg-slate-400 px-4 py-2 rounded-sm text-sm'>Prev</button>
-        <button className=' bg-slate-500 hover:bg-slate-400 px-4 py-2 rounded-sm text-sm'>Next</button>
-      </div>
+     
     </div>
   )
 }
