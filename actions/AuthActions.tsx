@@ -2,7 +2,8 @@
 
 import { signIn } from "@/auth";
 import prisma from "@/prisma/base";
-import bcrypt from 'bcrypt';
+const bcrypt = require('bcryptjs');
+
 import { CredentialsSignin } from "next-auth";
 import { redirect } from "next/navigation";
 
