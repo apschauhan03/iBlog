@@ -4,6 +4,8 @@ import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import prisma from "./prisma/base";
+// hello from server
+
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
